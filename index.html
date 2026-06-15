@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditor Estratégico de Repositorio y Negocio - CTO AI Agent Tool</title>
+    <meta name="description" content="Realiza auditorías tridimensionales de software: calidad de código (SAST, SCA, AST), investigación del estado del arte (GitHub, arXiv) y diseño de modelo de negocio.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- HEADER PRINCIPAL -->
+    <header>
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-badge">R2M</div>
+                <div class="logo-text">
+                    <h1>AUDITOR ESTRATÉGICO</h1>
+                    <p>Repositorio y Negocio (repo_to_market_analyzer)</p>
+                </div>
+            </div>
+            
+            <!-- Selector de Pestañas (Se muestra tras ejecutar la auditoría) -->
+            <div id="header-tabs" class="nav-tabs" style="display: none;">
+                <button class="tab-btn active" onclick="switchTab('general')">📊 General</button>
+                <button class="tab-btn" onclick="switchTab('code')">🔍 Código y Riesgos</button>
+                <button class="tab-btn" onclick="switchTab('market')">🌐 Estado del Arte</button>
+                <button class="tab-btn" onclick="switchTab('business')">💼 Modelo de Negocio</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO / INPUT DE AUDITORÍA -->
+        <section class="hero-section">
+            <span class="hero-tagline">CTO & Venture Capital AI Agent Skill</span>
+            <h2 class="hero-title">Auditoría Tridimensional de <span>Software y Negocio</span></h2>
+            <p class="hero-desc">
+                Analiza el stack tecnológico de tu código, evalúa la deuda técnica y riesgos de seguridad, investiga la brecha competitiva frente al mercado y genera una propuesta comercial estructurada en minutos.
+            </p>
+        </section>
+
+        <!-- FORMULARIO DE AUDITORÍA -->
+        <section class="glass-panel" style="margin-bottom: 2.5rem;">
+            <form id="audit-form" onsubmit="runAudit(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="input-path">Ruta del Repositorio Local (Absoluta)</label>
+                        <input 
+                            id="input-path"
+                            class="form-control" 
+                            type="text" 
+                            required
+                            placeholder="Ej. C:\xampp\htdocs\4elementos" 
+                            value="c:\xampp\htdocs\4elementos"
+                        />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="input-pattern">Modelo de Monetización</label>
+                        <select id="input-pattern" class="form-control">
+                            <option value="Auto" selected>Auto-detectar (Recomendado)</option>
+                            <option value="SaaS">Software as a Service (SaaS)</option>
+                            <option value="Open-Core">Open-Core</option>
+                            <option value="Dual-License">Licenciamiento Dual</option>
+                            <option value="API-First">API-First (Developer SDK)</option>
+                            <option value="Self-Hosted">Self-Hosted Enterprise</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-grid" style="margin-top: 1.25rem;">
+                    <div class="form-group">
+                        <label for="input-query">Nicho Comercial / Concepto del Proyecto</label>
+                        <input 
+                            id="input-query"
+                            class="form-control" 
+                            type="text" 
+                            required
+                            placeholder="Ej. simulador engorde porcino o plataforma e-learning" 
+                            value="engorde porcino"
+                        />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="input-tech-stack">Tecnologías Adicionales (Opcional, separadas por coma)</label>
+                        <input 
+                            id="input-tech-stack"
+                            class="form-control" 
+                            type="text" 
+                            placeholder="Ej. php, python, javascript, html" 
+                        />
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; justify-content: flex-end;">
+                    <button type="submit" class="btn-primary">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="display:inline;">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Iniciar Auditoría Estratégica
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- DASHBOARD DE RESULTADOS (Oculto inicialmente) -->
+        <div id="dashboard-container" class="audit-dashboard" style="display: none;">
+            
+            <!-- COLUMNA IZQUIERDA: RESUMEN GENERAL E INFORMACIÓN CLAVE -->
+            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                
+                <!-- DIAL DE DEUDA TÉCNICA -->
+                <div class="glass-panel score-container">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center;">Calificación de Deuda Técnica</h3>
+                    <svg class="dial-svg" width="120" height="120" viewBox="0 0 100 100">
+                        <circle class="dial-bg" cx="50" cy="50" r="40" />
+                        <circle id="dial-score-val" class="dial-val" cx="50" cy="50" r="40" stroke-dasharray="251.3" stroke-dashoffset="125.6" />
+                        <text class="dial-text" x="50" y="52" text-anchor="middle" transform="rotate(90 50 50)"></text>
+                        <text id="dial-score-text" class="dial-text" x="50" y="52" text-anchor="middle" transform="rotate(90 50 50)">0</text>
+                        <text id="dial-score-label" class="dial-label" x="50" y="72" text-anchor="middle" transform="rotate(90 50 50)">DEUDA</text>
+                    </svg>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 1rem; line-height: 1.4;">
+                        Mide la acumulación de advertencias SAST, riesgos de seguridad y falta de pruebas (menores puntajes indican un código más limpio y escalable).
+                    </p>
+                </div>
+
+                <!-- MÉTRICAS CLAVE -->
+                <div class="glass-panel" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Estadísticas del Código</h3>
+                    
+                    <div class="metric-card">
+                        <span class="metric-title">Archivos Encontrados</span>
+                        <span id="stat-files" class="metric-value">0</span>
+                        <span class="metric-desc">Total de recursos válidos escaneados</span>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <span class="metric-title">Tamaño del Código</span>
+                        <span id="stat-size" class="metric-value">0 KB</span>
+                        <span class="metric-desc">Peso físico combinado del código fuente</span>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <span class="metric-title">Licencia Detectada</span>
+                        <span id="stat-license" class="metric-value">Desconocida</span>
+                        <span class="metric-desc">Identificada a nivel de archivos LICENSE o package.json</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: PANELES DE PESTAÑAS DETALLADOS -->
+            <div class="glass-panel" style="min-height: 500px;">
+                
+                <!-- PESTAÑA 1: GENERAL -->
+                <div id="panel-general" class="tab-panel active">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem;">Resumen de Stack y Estructura</h3>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; letter-spacing: 0.05em;">Tecnologías Predominantes (Por tipo de archivo)</h4>
+                        <div id="extensions-container">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; letter-spacing: 0.05em;">Patrones Arquitectónicos Detectados</h4>
+                        <div id="architecture-container" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA 2: CÓDIGO Y CALIDAD -->
+                <div id="panel-code" class="tab-panel">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem;">Análisis de Calidad y Dependencias</h3>
+                    
+                    <!-- Resumen rápido de calidad -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div class="metric-card" style="min-height: 90px; text-align: center;">
+                            <span class="metric-title">Pendientes (TODO)</span>
+                            <span id="metric-todos" class="metric-value">0</span>
+                        </div>
+                        <div class="metric-card" style="min-height: 90px; text-align: center;">
+                            <span class="metric-title">Riesgos SAST</span>
+                            <span id="metric-risks" class="metric-value" style="color: var(--error);">0</span>
+                        </div>
+                        <div class="metric-card" style="min-height: 90px; text-align: center;">
+                            <span class="metric-title">Archivos de Pruebas</span>
+                            <span id="metric-tests" class="metric-value">0</span>
+                        </div>
+                        <div class="metric-card" style="min-height: 90px; text-align: center;">
+                            <span class="metric-title">Cobertura Est.</span>
+                            <span id="metric-coverage" class="metric-value" style="color: var(--primary);">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Dependencias -->
+                    <div style="margin-bottom: 2.5rem;">
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Software Composition Analysis (SCA)</h4>
+                        <div id="dependencies-container">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Riesgos SAST -->
+                    <div>
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Riesgos de Seguridad Detectados (SAST)</h4>
+                        <div style="overflow-x: auto; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                            <table class="risk-table">
+                                <thead>
+                                    <tr>
+                                        <th>Severidad</th>
+                                        <th>Vulnerabilidad / Archivo</th>
+                                        <th>Código Disparador</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="risks-table-body">
+                                    <!-- Inyectado dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA 3: ESTADO DEL ARTE Y MERCADO -->
+                <div id="panel-market" class="tab-panel">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem;">Análisis del Estado del Arte</h3>
+                    
+                    <!-- Gap Analysis -->
+                    <div class="item-card" style="background: rgba(245, 158, 11, 0.03); border-color: rgba(245, 158, 11, 0.15); margin-bottom: 2rem;">
+                        <div class="item-details">
+                            <h4 style="color: var(--secondary); display:flex; align-items:center; gap:0.5rem;">
+                                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                Brecha Tecnológica Resuelta (Gap Analysis)
+                            </h4>
+                            <p id="gap-analysis-text" style="line-height: 1.6; margin-top: 0.5rem;">Cargando análisis de la brecha...</p>
+                        </div>
+                    </div>
+
+                    <!-- Competidores en Github -->
+                    <div style="margin-bottom: 2.5rem;">
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Competidores Open-Source Relacionados (GitHub)</h4>
+                        <div id="competitors-container" class="results-list">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Papers Académicos -->
+                    <div>
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Publicaciones Científicas del Estado del Arte (OpenAlex / arXiv)</h4>
+                        <div id="papers-container" class="results-list">
+                            <!-- Inyectado dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PESTAÑA 4: ESTRATEGIA DE NEGOCIO -->
+                <div id="panel-business" class="tab-panel">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 1.5rem;">Arquitectura y Plan de Negocio</h3>
+                    
+                    <!-- Recomendaciones de Licencia -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                        <div class="metric-card">
+                            <span class="metric-title">Modelo de Monetización Invocado</span>
+                            <span id="rec-pattern" class="metric-value" style="color: var(--secondary);">Auto</span>
+                            <span class="metric-desc">Estrategia óptima sugerida por licencias y stack</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-title">Compatibilidad de Licencia</span>
+                            <span id="license-remarks" class="metric-desc" style="margin-top: 0.5rem; font-size: 0.8rem; line-height: 1.4;">Cargando análisis...</span>
+                        </div>
+                    </div>
+
+                    <!-- Alcance MVP -->
+                    <div style="margin-bottom: 2.5rem; background:rgba(0,0,0,0.15); padding:1.5rem; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; display:flex; justify-content:space-between; align-items:center;">
+                            <span>Estimación de Alcance MVP</span>
+                            <span class="meta-badge primary-badge">Complejidad: <span id="mvp-complexity">0%</span></span>
+                        </h4>
+                        
+                        <div style="display:flex; gap:2rem; margin-bottom:1.25rem;">
+                            <div>
+                                <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Semanas de Dev</span>
+                                <div id="mvp-weeks" style="font-family:var(--font-heading); font-size:1.75rem; font-weight:800; color:#fff;">0</div>
+                            </div>
+                            <div>
+                                <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Horas Totales Estimadas</span>
+                                <div id="mvp-hours" style="font-family:var(--font-heading); font-size:1.75rem; font-weight:800; color:#fff;">0</div>
+                            </div>
+                        </div>
+
+                        <h5 style="font-size:0.8rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">Hitos de Desarrollo Propuestos</h5>
+                        <ul id="mvp-milestones-container" style="list-style:none; font-size:0.8rem; padding-left:0.5rem;">
+                            <!-- Inyectado dinámicamente -->
+                        </ul>
+                    </div>
+
+                    <!-- LEAN CANVAS -->
+                    <div style="margin-bottom: 2.5rem;">
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Marco Lean Product (Lean Canvas)</h4>
+                        
+                        <div class="lean-canvas">
+                            <div class="canvas-cell cell-problem">
+                                <span class="canvas-title">1. Problemas</span>
+                                <ul id="canvas-problem" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-solution">
+                                <span class="canvas-title">4. Solución</span>
+                                <ul id="canvas-solution" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-metrics">
+                                <span class="canvas-title">8. Métricas Clave</span>
+                                <ul id="canvas-metrics" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-uvp">
+                                <span class="canvas-title">3. Propuesta de Valor</span>
+                                <ul id="canvas-uvp" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-advantage">
+                                <span class="canvas-title">9. Ventaja Injusta</span>
+                                <ul id="canvas-advantage" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-channels">
+                                <span class="canvas-title">5. Canales</span>
+                                <ul id="canvas-channels" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-segments">
+                                <span class="canvas-title">2. Segmentos de Cliente</span>
+                                <ul id="canvas-segments" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-costs">
+                                <span class="canvas-title">6. Estructura de Costos</span>
+                                <ul id="canvas-costs" class="canvas-list"></ul>
+                            </div>
+                            
+                            <div class="canvas-cell cell-revenue">
+                                <span class="canvas-title">7. Flujos de Ingresos</span>
+                                <ul id="canvas-revenue" class="canvas-list"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SIMULADOR FINANCIERO DINÁMICO -->
+                    <div>
+                        <h4 style="font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Calculadora de Inversión y Proyecciones Dinámicas</h4>
+                        
+                        <div style="display:grid; grid-template-columns:1fr; md:grid-template-columns:1fr 1fr; gap:2rem; margin-top:1.5rem;">
+                            <!-- Sliders -->
+                            <div class="finance-sliders">
+                                <div class="slider-group">
+                                    <div class="slider-header">
+                                        <span>Horas Estimadas de Desarrollo</span>
+                                        <span class="value"><span id="calc-dev-hours-val">80</span> hrs</span>
+                                    </div>
+                                    <input 
+                                        id="calc-dev-hours" 
+                                        type="range" 
+                                        class="custom-slider" 
+                                        min="40" 
+                                        max="600" 
+                                        step="10" 
+                                        value="80" 
+                                        oninput="calculateProjections()"
+                                    />
+                                </div>
+                                
+                                <div class="slider-group">
+                                    <div class="slider-header">
+                                        <span>Tarifa Desarrollador (USD/hr)</span>
+                                        <span class="value"><span id="calc-dev-rate-val">$35</span></span>
+                                    </div>
+                                    <input 
+                                        id="calc-dev-rate" 
+                                        type="range" 
+                                        class="custom-slider" 
+                                        min="15" 
+                                        max="150" 
+                                        step="5" 
+                                        value="35" 
+                                        oninput="calculateProjections()"
+                                    />
+                                </div>
+                                
+                                <div class="slider-group">
+                                    <div class="slider-header">
+                                        <span>Costo Configuración Inicial Infraestructura (USD)</span>
+                                        <span class="value"><span id="calc-infra-setup-val">$250</span></span>
+                                    </div>
+                                    <input 
+                                        id="calc-infra-setup" 
+                                        type="range" 
+                                        class="custom-slider" 
+                                        min="50" 
+                                        max="2000" 
+                                        step="50" 
+                                        value="250" 
+                                        oninput="calculateProjections()"
+                                    />
+                                </div>
+                                
+                                <div class="slider-group">
+                                    <div class="slider-header">
+                                        <span>Clientes Meta Activos (MRR)</span>
+                                        <span class="value"><span id="calc-target-clients-val">50</span></span>
+                                    </div>
+                                    <input 
+                                        id="calc-target-clients" 
+                                        type="range" 
+                                        class="custom-slider" 
+                                        min="5" 
+                                        max="500" 
+                                        step="5" 
+                                        value="50" 
+                                        oninput="calculateProjections()"
+                                    />
+                                </div>
+                            </div>
+
+                            <!-- Resultados financieros calculados -->
+                            <div style="background:rgba(3,7,18,0.4); padding:1.5rem; border-radius:var(--radius-md); border:1px solid var(--border-color); display:flex; flex-direction:column; gap:1rem;">
+                                <h5 style="font-family:var(--font-heading); font-size:0.9rem; font-weight:700; color:#fff; text-transform:uppercase;">Resumen Financiero MVP</h5>
+                                
+                                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem; font-size:0.85rem;">
+                                    <span style="color:var(--text-muted);">Costo Estimado de Dev:</span>
+                                    <span id="res-mvp-cost" style="font-weight:600; color:#fff;">$0</span>
+                                </div>
+                                
+                                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem; font-size:0.85rem;">
+                                    <span style="color:var(--text-muted);">Inversión Total Requerida:</span>
+                                    <span id="res-initial-invest" style="font-weight:600; color:#fff;">$0</span>
+                                </div>
+                                
+                                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem; font-size:0.85rem;">
+                                    <span style="color:var(--text-muted);">Punto de Equilibrio:</span>
+                                    <span id="res-breakeven" style="font-weight:600; color:var(--secondary);">0 clientes</span>
+                                </div>
+
+                                <div style="display:flex; justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem; font-size:0.85rem;">
+                                    <span style="color:var(--text-muted);">MRR Escenario Conservador (10 clientes):</span>
+                                    <span id="res-mrr-10" style="font-weight:600; color:var(--primary);">$0</span>
+                                </div>
+
+                                <div style="display:flex; justify-content:space-between; padding-bottom:0.5rem; font-size:0.85rem;">
+                                    <span style="color:var(--text-muted);">MRR Escenario Meta (Clientes seleccionados):</span>
+                                    <span id="res-mrr-target" style="font-weight:700; color:var(--primary); font-size:1.15rem;">$0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de Planes Proyectados -->
+                        <div style="margin-top:2rem;">
+                            <h5 style="font-family:var(--font-heading); font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.75rem;">Estructura de Tarifas Comercial Proyectada</h5>
+                            <div style="overflow-x: auto; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                <table class="risk-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Plan</th>
+                                            <th>Precio / Frecuencia</th>
+                                            <th>Funcionalidades Clave</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tiers-table-body">
+                                        <!-- Inyectado dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loader" class="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Ejecutando Auditoría Tridimensional...</div>
+        <ul class="step-loading-list">
+            <li class="pending">Analizando la estructura del directorio y dependencias (SAST/SCA)...</li>
+            <li class="pending">Analizando la sintaxis del código (AST)...</li>
+            <li class="pending">Buscando competidores directos en GitHub...</li>
+            <li class="pending">Consultando papers científicos y el estado del arte (OpenAlex/arXiv)...</li>
+            <li class="pending">Formulando el modelo de negocio e identificando patrones de monetización...</li>
+            <li class="pending">Generando el Lean Canvas y matrices financieras...</li>
+        </ul>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2026 Auditor Estratégico de Repositorio y Negocio. Todos los derechos reservados.</p>
+        <p>Potenciado por Antigravity Autonomous Agent Framework & PHP / Python Backend Engines.</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        // Expose selector tab mapping
+        document.getElementById('audit-form').addEventListener('submit', function() {
+            document.getElementById('header-tabs').style.display = 'flex';
+        });
+    </script>
+</body>
+</html>

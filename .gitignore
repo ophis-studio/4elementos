@@ -1,0 +1,11 @@
+# Temporary and cache directories
+tmp/
+*.json
+!package.json
+!composer.json
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
