@@ -1,11 +1,6 @@
-# Temporary and cache directories
-tmp/
-*.json
-!package.json
-!composer.json
+# Ignorar todo en el repositorio
+*
 
-# IDE / System files
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
+# Permitir únicamente la infografía e instrucciones de git
+!infograf_a_interactiva_html.html
+!.gitignore
