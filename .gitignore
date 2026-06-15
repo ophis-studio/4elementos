@@ -1,6 +1,6 @@
 # Ignorar todo en el repositorio
 *
 
-# Permitir únicamente la infografía e instrucciones de git
-!infograf_a_interactiva_html.html
+# Permitir únicamente la infografía (ahora index.html) e instrucciones de git
+!index.html
 !.gitignore
